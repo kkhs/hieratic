@@ -1,4 +1,4 @@
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 from hieratic import ResourceBase
 from hieratic.item import ItemResource
@@ -174,7 +174,8 @@ class CollectionResource(ResourceBase):
 
     @staticmethod
     def __load_entry_point(group, name):
-        entry_point = next((x for x in iter_entry_points(group, name) if x.name == name), None)
+        eps = entry_points(group=group)
+        entry_point = next((x for x in eps if x.name == name), None)
         if entry_point is None:
             raise ValueError('entry point "{}.{}" not found.'.format(group, name))
         return entry_point.load()
